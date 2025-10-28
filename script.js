@@ -58,10 +58,10 @@ async function loadRepoList() {
     // Cập nhật title và tổng trang
     CONFIG.title = CURRENT_REPO.title;
     CONFIG.total_pages = CURRENT_REPO.max_page;
-    const page = parseInt(params.get("page")) || 1;
-    document.title = `${CONFIG.title} Page ${page}`;
+    const page = Number.parseInt(params.get("page")) || 1;
+    document.title = `${page}. ${CONFIG.title} `;
     const h1 = document.querySelector("h1");
-    if (h1) h1.textContent = CONFIG.title;
+    if (h1) h1.textContent = `${CONFIG.title} page ${page}/${CONFIG.total_pages}`;
 
     // Bắt đầu load dữ liệu trang hiện tại
     loadPage();
