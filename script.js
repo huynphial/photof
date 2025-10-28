@@ -381,7 +381,7 @@ document.getElementById("scroll10Btn").addEventListener("click", () => {
     const rect = cards[i].getBoundingClientRect();
     const cardTop = rect.top + window.scrollY;
     if (cardTop > scrollTop) {
-      nextIndex = i + 10; // 10 card tiếp theo
+      nextIndex = i + 20; // 10 card tiếp theo
       break;
     }
   }
@@ -408,3 +408,51 @@ nextPageBtn.addEventListener("click", () => {
 function goToPage(repo,page) {
   window.location.href = `index.html?repo=${repo}&page=${page}`;
 }
+
+
+
+let pressTimer;
+let isHolding = false; // Biến để theo dõi xem có đang giữ không
+
+// Thời gian giữ (tính bằng milliseconds) để kích hoạt cuộn xuống cuối trang
+const HOLD_DURATION = 500; // Giữ 0.5 giây
+
+// Hàm cuộn xuống cuối trang
+const scrollToBottom = () => {
+    // Sử dụng document.body.scrollHeight để cuộn xuống cuối trang
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+    });
+    isHolding = true; // Đánh dấu là đã thực hiện hành động giữ
+};
+
+// Sự kiện khi nhấn chuột xuống
+document.getElementById("scroll10Btn").addEventListener("mousedown", () => {
+    // Thiết lập một timer
+    pressTimer = setTimeout(() => {
+        // Nếu timer hết hạn, cuộn xuống cuối trang
+        scrollToBottom();
+    }, HOLD_DURATION);
+});
+
+// Sự kiện khi nhả chuột (hoặc chuột rời khỏi nút)
+const cancelHold = () => {
+    // Xóa timer nếu có
+    clearTimeout(pressTimer);
+};
+
+document.getElementById("scroll10Btn").addEventListener("mouseup", cancelHold);
+document.getElementById("scroll10Btn").addEventListener("mouseleave", cancelHold);
+
+// Hỗ trợ thiết bị di động (nếu cần)
+document.getElementById("scroll10Btn").addEventListener("touchstart", (e) => {
+    // Ngăn chặn sự kiện mặc định để tránh click kép
+    e.preventDefault(); 
+    pressTimer = setTimeout(() => {
+        scrollToBottom();
+    }, HOLD_DURATION);
+}, { passive: false });
+
+document.getElementById("scroll10Btn").addEventListener("touchend", cancelHold);
+document.getElementById("scroll10Btn").addEventListener("touchcancel", cancelHold);

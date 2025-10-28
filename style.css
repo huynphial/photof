@@ -339,9 +339,7 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
   transition: background 0.3s ease;
 }
-#scroll10Btn:hover {
-  background: #0a944d;
-}
+
 
 #nextPageBtn {
   position: fixed;
@@ -360,9 +358,6 @@
   transition: background 0.3s ease;
 }
 
-#nextPageBtn:hover {
-  background: #0056b3;
-}
 
 
 #pagination {
