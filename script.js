@@ -411,12 +411,6 @@ function goToPage(repo,page) {
 
 
 
-let pressTimer;
-let isHolding = false; // Biến để theo dõi xem có đang giữ không
-
-// Thời gian giữ (tính bằng milliseconds) để kích hoạt cuộn xuống cuối trang
-const HOLD_DURATION = 500; // Giữ 0.5 giây
-
 // Hàm cuộn xuống cuối trang
 const scrollToBottom = () => {
     // Sử dụng document.body.scrollHeight để cuộn xuống cuối trang
@@ -428,31 +422,9 @@ const scrollToBottom = () => {
 };
 
 // Sự kiện khi nhấn chuột xuống
-document.getElementById("scroll10Btn").addEventListener("mousedown", () => {
+document.getElementById("scrollDownBtn").addEventListener("click", () => {
     // Thiết lập một timer
-    pressTimer = setTimeout(() => {
-        // Nếu timer hết hạn, cuộn xuống cuối trang
-        scrollToBottom();
-    }, HOLD_DURATION);
+    scrollToBottom();
 });
 
-// Sự kiện khi nhả chuột (hoặc chuột rời khỏi nút)
-const cancelHold = () => {
-    // Xóa timer nếu có
-    clearTimeout(pressTimer);
-};
 
-document.getElementById("scroll10Btn").addEventListener("mouseup", cancelHold);
-document.getElementById("scroll10Btn").addEventListener("mouseleave", cancelHold);
-
-// Hỗ trợ thiết bị di động (nếu cần)
-document.getElementById("scroll10Btn").addEventListener("touchstart", (e) => {
-    // Ngăn chặn sự kiện mặc định để tránh click kép
-    e.preventDefault(); 
-    pressTimer = setTimeout(() => {
-        scrollToBottom();
-    }, HOLD_DURATION);
-}, { passive: false });
-
-document.getElementById("scroll10Btn").addEventListener("touchend", cancelHold);
-document.getElementById("scroll10Btn").addEventListener("touchcancel", cancelHold);

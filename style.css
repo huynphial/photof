@@ -325,7 +325,7 @@
 
 #scroll10Btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 80px;
   right: 20px;
   z-index: 9999;
   width: 50px;
@@ -343,7 +343,7 @@
 
 #nextPageBtn {
   position: fixed;
-  bottom: 80px;
+  bottom: 140px;
   right: 20px;
   z-index: 9999;
   width: 50px;
@@ -358,6 +358,22 @@
   transition: background 0.3s ease;
 }
 
+#scrollDownBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(47, 66, 71, 0.3);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  transition: background 0.3s ease;
+}
 
 
 #pagination {
@@ -430,7 +446,7 @@
   height: 128px;
   font-size: 48px;
   transition: background 0.9s ease;
-  bottom: 40px;
+  bottom: 180px;
   right: 30px;
 }
   #nextPageBtn {
@@ -438,7 +454,15 @@
   height: 128px;
   font-size: 48px;
   transition: background 0.9s ease;
-  bottom: 180px;
+  bottom: 320px;
+  right: 30px;
+}
+  #scrollDownBtn {
+  width: 128px;
+  height: 128px;
+  font-size: 48px;
+  transition: background 0.9s ease;
+  bottom: 40px;
   right: 30px;
 }
 .button-box {
