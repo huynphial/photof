@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Photo Gallery</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Photo Gallery</h1>
+
+  <!-- 🆕 Combo box chọn dataset -->
+  <div id="repoSelectorBox" style="margin: 10px 0; text-align: center;">
+    <label for="repoSelect" style="color: #eee;">Chọn bộ dữ liệu: </label>
+    <select id="repoSelect" style="padding: 6px 10px; font-size: 16px;"></select>
+  </div>
+
+  <div id="gallery" class="grid"></div>
+  <div id="pagination" class="pagination"></div>
+
+  <!-- Modal hiển thị chi tiết -->
+  <div id="modal">
+    <div class="content">
+      <span id="closeModal">✕</span>
+      <img id="modalImg" src="" alt="">
+      <div class="modal-info-row">
+        <div id="modalInfo"></div>
+        <div class="button-box modal-buttons">
+          <button class="save-btn" id="modalSaveBtn" title="Lưu ảnh"></button>
+          <button class="open-btn" id="modalOpenBtn" title="Mở ảnh"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="scroll10Btn" title="Scroll 10 ảnh">🔽</button>
+  <button id="nextPageBtn" title="Next page">▶️</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

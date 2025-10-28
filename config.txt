@@ -1,0 +1,3 @@
+title=Nikon P1 2025-10-27
+total_pages=4000
+api_url=https://fw-tele-api-01.huynphial.workers.dev

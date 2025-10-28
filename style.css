@@ -1,0 +1,451 @@
+/* ========== GRID GALLERY ========== */
+#gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* desktop: 3 cột */
+  gap: 12px;
+  margin-top: 20px;
+  padding: 0 10px;
+  align-items: start;
+}
+
+/* ========== MODAL (Full Screen Overlay) ========== */
+#modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+/* Nội dung modal căn giữa */
+#modal .content {
+  position: relative;
+  background: #111;
+  border-radius: 8px;
+  padding: 10px;
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ảnh phóng to vừa màn hình */
+#modal img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+/* Thông tin ảnh (ở dưới) */
+#modal #modalInfo {
+  color: white;
+  text-align: left;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Nút đóng */
+#closeModal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+#closeModal:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+
+/* ========== CARD ========== */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease;
+  cursor: pointer;
+  position: relative;
+}
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* ========== IMAGE ========== */
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  background-color: #f8f8f8;
+}
+
+/* ========== INFO ========== */
+.card .info {
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+}
+.card .info strong {
+  font-size: 15px;
+  color: #111;
+}
+.card .info small {
+  color: #666;
+}
+
+/* ========== DETAIL ========== */
+.card .detail {
+  max-height: 0;
+  overflow: hidden;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+  font-size: 13px;
+  color: #444;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  padding: 0 12px;
+}
+
+
+/* ========== BUTTONS ========== */
+
+.button-box {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 6px;
+  opacity: 1;              /* 👈 luôn hiển thị */
+  transform: translateY(0); /* 👈 không trượt */
+}
+
+
+/* --- Buttons --- */
+.save-btn,
+.open-btn {
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, background 0.3s ease;
+  font-size: 0;
+}
+
+/* Save */
+.save-btn {
+  background: linear-gradient(145deg, #0078d7, #005fa3);
+}
+.save-btn:hover {
+  transform: scale(1.1);
+  background: linear-gradient(145deg, #1e90ff, #0060b6);
+}
+.save-btn::before {
+  content: "💾";
+  font-size: 28px;
+}
+
+/* Open */
+.open-btn {
+  background: linear-gradient(145deg, #28a745, #1e7e34);
+}
+.open-btn:hover {
+  transform: scale(1.1);
+  background: linear-gradient(145deg, #34c759, #1e9a3c);
+}
+.open-btn::before {
+  content: "🔗";
+  font-size: 28px;
+}
+
+/* --- Grid info --- */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid #ddd;
+  padding: 4px 8px 6px 8px;
+  border-radius: 0 0 10px 10px;
+  line-height: 1.25;
+}
+.info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.info-col strong {
+  color: #111;
+  font-weight: 600;
+}
+.info-col div {
+  margin: 0;
+  padding: 0;
+}
+
+/* Modal info row: info + nút cùng hàng */
+.modal-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* căn top, nếu muốn căn giữa dùng center */
+  margin-top: 10px;
+  gap: 12px;
+}
+
+/* Info text bên trái */
+#modalInfo {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+  background: transparent;  /* bỏ viền/nền */
+  border: none;             /* bỏ viền */
+  padding: 0;               /* bỏ padding dư */
+}
+
+/* Buttons bên phải, nằm ngang */
+.modal-buttons {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: row;      /* ← để 2 nút nằm ngang */
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Nút Save và Open */
+.modal-buttons .save-btn,
+.modal-buttons .open-btn {
+  width: 44px;
+  height: 44px;
+  font-size: 0;
+  border-radius: 50%;
+}
+
+#scroll10Btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: #2f4247;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  transition: background 0.3s ease;
+}
+#scroll10Btn:hover {
+  background: #0a944d;
+}
+
+#nextPageBtn {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 9999;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: #2f4247;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  transition: background 0.3s ease;
+}
+
+#nextPageBtn:hover {
+  background: #0056b3;
+}
+
+
+#pagination {
+  display: flex;
+  justify-content: center; /* căn giữa ngang */
+  align-items: center;     /* nếu muốn căn giữa dọc */
+  flex-wrap: wrap;         /* nếu nhiều button xuống dòng */
+  gap: 8px;                /* khoảng cách giữa button */
+  margin-top: 20px;        /* cách lưới */
+}
+#pagination button {
+  padding: 8px 12px;
+  min-width: 40px;
+  font-size: 16px;
+  cursor: pointer;
+}
+#pagination button.active {
+  background: #0078d7;
+  color: #fff;
+  border-radius: 6px;
+}
+
+body, #gallery {
+  background-color: #111; /* nền tối */
+  color: #eee;            /* chữ sáng */
+}
+
+.card, .card .detail, .card .info-col strong, .info-grid, #pagination {
+  background-color: #1c1c1c; 
+  color: #eee;
+  border-color: #444; /* viền tối hơn */
+}
+
+
+
+/* --- Mobile --- */
+@media (max-width: 1024px) {
+
+  #gallery {
+    grid-template-columns: 1fr;
+    gap: 8px; /* giảm khoảng cách giữa các card */
+  }
+
+  .card img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    min-width: 300px; /* tối thiểu */
+    min-height: 300px; /* tối thiểu */
+  }
+
+  .card {
+    overflow: visible;
+    font-size: 32px; /* chữ to hơn */
+  }
+
+  .card .info {
+    font-size: 24px;
+  }
+
+  .card .info strong {
+    font-size: 32px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 2px 0;
+    line-height: 1.4;
+  }
+
+  /* Nút to hơn cho cảm ứng */
+  .save-btn,
+  .open-btn {
+    width: 96px;
+    height: 96px;
+    margin-left: 12px;
+  }
+
+  .save-btn::before,
+  .open-btn::before {
+    font-size: 96px;
+  }
+
+  .button-box {
+    bottom: 12px;
+    right: 12px;
+    gap: 10px;
+  }
+
+
+  .modal-info-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #modalInfo {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .modal-buttons {
+    flex-direction: row; /* vẫn nằm ngang */
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .modal-buttons .save-btn,
+  .modal-buttons .open-btn {
+    width: 60px;
+    height: 60px;
+  }
+  #pagination button {
+    font-size: 48px;       /* tăng chữ */
+    padding: 18px 18px;    /* tăng vùng chạm */
+    min-width: 44px;       /* tối thiểu 44px để đủ vùng chạm */
+  }
+
+  #pagination .jump-box input#jumpInput {
+    width: 80px;           /* input to hơn */
+    font-size: 48px;
+    padding: 16px 18px;
+  }
+
+  #pagination .jump-box button#jumpBtn {
+    font-size: 48px;
+    padding: 18px 12px;
+  }
+
+  #pagination .dots {
+    font-size: 48px;
+  }
+
+  #scroll10Btn {
+  width: 128px;
+  height: 128px;
+  font-size: 48px;
+  transition: background 0.9s ease;
+  bottom: 40px;
+  right: 30px;
+}
+  #nextPageBtn {
+  width: 128px;
+  height: 128px;
+  font-size: 48px;
+  transition: background 0.9s ease;
+  bottom: 180px;
+  right: 30px;
+}
+.button-box {
+  right: 150px;
+}
+
+}
+
+
+
+
+
+
+
