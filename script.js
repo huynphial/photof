@@ -128,13 +128,19 @@ async function loadPage() {
 
       const info = document.createElement("div");
       info.className = "info-grid";
+      let focal35 = data.focal_length_in35mm
+      if (focal35 != "") focal35 =  Number.parseFloat(focal35.replace('mm',''))
+      if (focal35 == Number.parseFloat(data.focal_length.replace('mm',''))) focal35 = ""
+      else focal35 = `${focal35} mm`
       info.innerHTML = `
         <div class="info-col">
           <strong>${escapeHtml(data.title || "(No title)")}</strong>
-          <small>📷 ${escapeHtml(data.camera || "Unknown camera")}</small>
-          <small>🔭 ${escapeHtml(data.lens_model || "Không rõ")}</small>
+          <small>📷 <b>${escapeHtml(data.camera || "Unknown camera")}</b></small>
+          <small>🔭 <b>${escapeHtml(data.lens_model || "Không rõ")}</b></small>
           <small>📏 ${escapeHtml((data.max_width && data.max_height) ? `${data.max_width}×${data.max_height}` : "")}</small>
-          <small>🔦 Focal: ${escapeHtml(data.focal_length || "")}</small>
+          <small>🔦 ${escapeHtml(data.focal_length.replace('.0','') || "")} ${escapeHtml( focal35 || "")}</small>
+          <small>Ⓜ️ ${escapeHtml(data.exposure_program || "")}</small>
+          <small>🌩 ${escapeHtml(data.flash || "")}</small>
         </div>
         <div class="info-col">
           <small>👤 ${escapeHtml(data.realname || "")}</small>
@@ -142,6 +148,8 @@ async function loadPage() {
           <small>ISO: ${escapeHtml(data.iso || "")}</small>
           <small>ƒ/${escapeHtml(data.aperture || "")}</small>
           <small>${escapeHtml(data.exposure_time || "")}s</small>
+          <small>EV ${escapeHtml(data.exposure_compensation || "")}</small>
+          <small>WB ${escapeHtml(data.white_balance || "")}</small>
         </div>`;
 
       const buttonBox = document.createElement("div");
@@ -267,4 +275,136 @@ function escapeHtml(s) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+
+// Modal logic
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modalImg");
+const modalInfo = document.getElementById("modalInfo");
+const closeModal = document.getElementById("closeModal");
+const modalSaveBtn = document.getElementById("modalSaveBtn");
+const modalOpenBtn = document.getElementById("modalOpenBtn");
+
+function openModal(data) {
+  currentModalData = data;
+  modalImg.src = data.url_max_2000 || data.url_max;
+  modalImg.style.maxWidth = "90vw";
+  modalImg.style.maxHeight = "90vh";
+
+  modalInfo.innerHTML = `
+    ${
+      data.max_width && data.max_height
+        ? `<p><strong>Kích thước:</strong> ${data.max_width} × ${data.max_height}</p>`
+        : ""
+    }
+  `;
+
+  modal.style.display = "flex";
+}
+// Sự kiện khi bấm nút Save
+modalSaveBtn.addEventListener("click", () => {
+  if (!currentModalData) return;
+  const blobUrl = currentModalData.url_max || currentModalData.url_max_2000;
+  const a = document.createElement("a");
+  a.href = blobUrl;
+  a.download = `${currentModalData.title || "image"}.jpg`;
+  a.click();
+});
+
+// Sự kiện khi bấm nút Open
+modalOpenBtn.addEventListener("click", () => {
+  if (!currentModalData) return;
+  const blobUrl = currentModalData.url_max || currentModalData.url_max_2000;
+  window.open(blobUrl, "_blank");
+});
+
+// Hàm đóng modal
+function closeModalFunc() {
+  modal.style.display = "none";
+}
+
+// Đóng khi click nút ✕
+closeModal.addEventListener("click", closeModalFunc);
+
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) closeModalFunc();
+});
+
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("save-btn")) {
+    const btn = e.target;
+    
+    const payload = {
+      web_query: {
+        data: btn.dataset.data,
+      },
+    };
+
+    btn.disabled = true;
+    btn.textContent = "⏳ Saving...";
+
+    try {
+      const res = await fetch("https://fw-tele-api-01.huynphial.workers.dev", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        btn.textContent = "✅ Saved";
+      } else {
+        console.error("Server error:", res.status, res.statusText);
+        btn.textContent = "⚠️ Retry";
+        btn.disabled = false;
+      }
+    } catch (err) {
+      console.error("Lỗi gửi request:", err);
+      btn.textContent = "❌ Error";
+      btn.disabled = false;
+    }
+  }
+});
+
+document.getElementById("scroll10Btn").addEventListener("click", () => {
+  const gallery = document.getElementById("gallery");
+  if (!gallery) return;
+  const cards = gallery.querySelectorAll(".card");
+  if (!cards.length) return;
+
+  // Tính vị trí hiện tại
+  const scrollTop = window.scrollY || window.pageYOffset;
+  let nextIndex = 0;
+
+  // Tìm thẻ card đầu tiên ở dưới vị trí hiện tại
+  for (let i = 0; i < cards.length; i++) {
+    const rect = cards[i].getBoundingClientRect();
+    const cardTop = rect.top + window.scrollY;
+    if (cardTop > scrollTop) {
+      nextIndex = i + 10; // 10 card tiếp theo
+      break;
+    }
+  }
+
+  if (nextIndex >= cards.length) nextIndex = cards.length - 1;
+  cards[nextIndex].scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+// ===== NÚT NEXT PAGE =====
+const nextPageBtn = document.getElementById("nextPageBtn");
+
+nextPageBtn.addEventListener("click", () => {
+  const params = new URLSearchParams(window.location.search);
+  const repo = params.get("repo")
+  const currentPage = parseInt(params.get("page")) || 1;
+  const nextPage = currentPage + 1;
+  if (nextPage <= CURRENT_REPO.max_page) {
+    goToPage(repo,nextPage);
+  } else {
+    alert("Đây là trang cuối cùng!");
+  }
+});
+
+function goToPage(repo,page) {
+  window.location.href = `index.html?repo=${repo}&page=${page}`;
 }
