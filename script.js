@@ -121,6 +121,9 @@ async function loadPage() {
       img.src = imgSrc;
       img.alt = data.title || "";
       img.className = "card-img";
+      img.onerror = () => {
+        card.style.display = "none";
+      };
       img.onclick = (ev) => {
         ev.stopPropagation();
         openModal(data);
@@ -134,7 +137,7 @@ async function loadPage() {
       else focal35 = `${focal35} mm`
       info.innerHTML = `
         <div class="info-col">
-          <strong>${escapeHtml(data.title || "(No title)")}</strong>
+          <strong>${page}.${i}. ${escapeHtml(data.title || "(No title)")}</strong>
           <small>📷 <b>${escapeHtml(data.camera || "Unknown camera")}</b></small>
           <small>🔭 <b>${escapeHtml(data.lens_model || "Không rõ")}</b></small>
           <small>📏 ${escapeHtml((data.max_width && data.max_height) ? `${data.max_width}×${data.max_height}` : "")}</small>
