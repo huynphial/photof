@@ -369,48 +369,93 @@ document.addEventListener("click", async (e) => {
   }
 });
 
+let animationId = null;
+
+// Biến để kiểm tra xem cuộn có bị hủy không
+let isScrollingCancelled = false; 
+
 document.getElementById("scroll10Btn").addEventListener("click", () => {
-  const gallery = document.getElementById("gallery");
-  if (!gallery) return;
-  const cards = gallery.querySelectorAll(".card");
-  if (!cards.length) return;
-
-  const scrollTop = window.scrollY || window.pageYOffset;
-  let nextIndex = 0;
-
-  // Tìm thẻ card đầu tiên ở dưới vị trí hiện tại
-  for (let i = 0; i < cards.length; i++) {
-    const rect = cards[i].getBoundingClientRect();
-    const cardTop = rect.top + window.scrollY;
-    if (cardTop > scrollTop) {
-      nextIndex = i + 20; // 10 card tiếp theo
-      break;
+    // 1. Dừng animation cũ nếu có
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
     }
-  }
+    isScrollingCancelled = false;
 
-  if (nextIndex >= cards.length) nextIndex = cards.length - 1;
-  const targetY = cards[nextIndex].offsetTop;
+    const gallery = document.getElementById("gallery");
+    if (!gallery) return;
+    const cards = gallery.querySelectorAll(".card");
+    if (!cards.length) return;
 
-  // Xác định tốc độ cuộn theo kích thước màn hình
-  const duration = window.innerWidth < 1024 ? 5000 : 1000;
+    const scrollTop = window.scrollY || window.pageYOffset;
+    let nextIndex = 0;
 
-  // Cuộn đều (linear)
-  const startY = window.scrollY;
-  const distance = targetY - startY;
-  const startTime = performance.now();
+    // Tìm thẻ card đầu tiên ở dưới vị trí hiện tại
+    for (let i = 0; i < cards.length; i++) {
+        const rect = cards[i].getBoundingClientRect();
+        const cardTop = rect.top + window.scrollY;
+        if (cardTop > scrollTop) {
+            nextIndex = i + 20; // 20 card tiếp theo
+            break;
+        }
+    }
 
-  function smoothScroll(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1); // linear progress
-    window.scrollTo(0, startY + distance * progress);
+    if (nextIndex >= cards.length) nextIndex = cards.length - 1;
+    // Đảm bảo không cuộn nếu đã ở cuối cùng
+    if (nextIndex === cards.length - 1 && cards[nextIndex].getBoundingClientRect().bottom <= window.innerHeight) {
+        return; 
+    }
+    
+    const targetY = cards[nextIndex].offsetTop;
 
-    if (progress < 1) requestAnimationFrame(smoothScroll);
-  }
+    // Xác định tốc độ cuộn theo kích thước màn hình
+    const duration = window.innerWidth < 1024 ? 10000 : 1000;
 
-  requestAnimationFrame(smoothScroll);
+    // Cuộn đều (linear)
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+
+    function smoothScroll(currentTime) {
+        // Kiểm tra nếu cuộn bị hủy, thoát ngay lập tức
+        if (isScrollingCancelled) {
+            animationId = null; // Đặt lại ID
+            return;
+        }
+
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1); // linear progress
+        window.scrollTo(0, startY + distance * progress);
+
+        if (progress < 1) {
+            // Lưu ID để có thể hủy sau này
+            animationId = requestAnimationFrame(smoothScroll);
+        } else {
+            animationId = null; // Đã cuộn xong
+        }
+    }
+
+    // Bắt đầu animation và lưu ID
+    animationId = requestAnimationFrame(smoothScroll);
 });
 
+// --- BỔ SUNG: DỪNG CUỘN KHI TOUCH ---
 
+/**
+ * Hàm xử lý sự kiện touchstart để hủy animation cuộn.
+ */
+const handleTouchCancelScroll = () => {
+    // Chỉ hủy nếu hiện tại đang có animation cuộn
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+        isScrollingCancelled = true; // Đặt cờ là đã bị hủy
+        console.log("Scrolling stopped by touch!");
+    }
+};
+
+// Thêm sự kiện touchstart để dừng cuộn
+window.addEventListener("touchstart", handleTouchCancelScroll, { passive: true });
 
 // ===== NÚT NEXT PAGE =====
 const nextPageBtn = document.getElementById("nextPageBtn");
