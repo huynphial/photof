@@ -372,7 +372,6 @@ document.getElementById("scroll10Btn").addEventListener("click", () => {
   const cards = gallery.querySelectorAll(".card");
   if (!cards.length) return;
 
-  // Tính vị trí hiện tại
   const scrollTop = window.scrollY || window.pageYOffset;
   let nextIndex = 0;
 
@@ -387,8 +386,28 @@ document.getElementById("scroll10Btn").addEventListener("click", () => {
   }
 
   if (nextIndex >= cards.length) nextIndex = cards.length - 1;
-  cards[nextIndex].scrollIntoView({ behavior: "smooth", block: "start" });
+  const targetY = cards[nextIndex].offsetTop;
+
+  // Xác định tốc độ cuộn theo kích thước màn hình
+  const duration = window.innerWidth < 1024 ? 5000 : 1000;
+
+  // Cuộn đều (linear)
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+  const startTime = performance.now();
+
+  function smoothScroll(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1); // linear progress
+    window.scrollTo(0, startY + distance * progress);
+
+    if (progress < 1) requestAnimationFrame(smoothScroll);
+  }
+
+  requestAnimationFrame(smoothScroll);
 });
+
+
 
 // ===== NÚT NEXT PAGE =====
 const nextPageBtn = document.getElementById("nextPageBtn");
