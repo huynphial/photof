@@ -395,7 +395,7 @@ document.getElementById("scroll10Btn").addEventListener("click", () => {
         const rect = cards[i].getBoundingClientRect();
         const cardTop = rect.top + window.scrollY;
         if (cardTop > scrollTop) {
-            nextIndex = i + 20; // 20 card tiếp theo
+            nextIndex = i + 10; // 20 card tiếp theo
             break;
         }
     }
@@ -409,7 +409,7 @@ document.getElementById("scroll10Btn").addEventListener("click", () => {
     const targetY = cards[nextIndex].offsetTop;
 
     // Xác định tốc độ cuộn theo kích thước màn hình
-    const duration = window.innerWidth < 1024 ? 10000 : 1000;
+    const duration = window.innerWidth < 1024 ? 1000 : 500;
 
     // Cuộn đều (linear)
     const startY = window.scrollY;
