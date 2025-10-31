@@ -253,7 +253,7 @@ function createPagination(currentPage) {
   jumpBox.className = "jump-box";
   jumpBox.innerHTML = `
     <span>Đi tới trang:</span>
-    <input type="number" id="jumpInput" min="1" max="${totalPages}" style="width:60px;">
+    <input type="number" id="jumpInput" min="1" max="${totalPages}" style="width:150px;height:48px">
     <button id="jumpBtn">Go</button>`;
   container.appendChild(jumpBox);
 
