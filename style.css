@@ -244,6 +244,15 @@
   font-size: 24px;
 }
 
+.save-btn:active {
+  background: linear-gradient(145deg, #ff9800, #e68900); /* Màu cam khi click */
+}
+
+.save-btn.clicked {
+  background: linear-gradient(145deg, #ff9800, #e68900); /* Màu cam */
+}
+
+
 /* Open */
 .open-btn {
   background: linear-gradient(145deg, #28a745, #1e7e34);
@@ -466,16 +475,16 @@
   right: 30px;
 }
 .button-box {
-  right: 150px;
+  right: 180px;
 }
 
 .save-btn {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
 }
 .open-btn {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
 }
 
 }
